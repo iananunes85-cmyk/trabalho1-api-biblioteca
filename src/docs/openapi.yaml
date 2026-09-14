@@ -170,9 +170,23 @@ paths:
       responses:
         "200":
           description: Livro atualizado com sucesso
+          content:
+            application/json:
+              example:
+                id: 1
+                titulo: Dom Casmurro - Nova Edição
+                autor: Machado de Assis
+                genero: romance
+                ano: 1899
 
         "404":
           description: Livro não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: RECURSO_NAO_ENCONTRADO
+                  mensagem: Livro com id 99 não encontrado
 
     patch:
       tags:
@@ -196,9 +210,23 @@ paths:
       responses:
         "200":
           description: Livro atualizado parcialmente
+          content:
+            application/json:
+              example:
+                id: 1
+                titulo: Dom Casmurro
+                autor: Machado de Assis
+                genero: literatura
+                ano: 1899
 
         "404":
           description: Livro não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: RECURSO_NAO_ENCONTRADO
+                  mensagem: Livro com id 99 não encontrado
 
     delete:
       tags:
@@ -218,6 +246,12 @@ paths:
 
         "404":
           description: Livro não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: RECURSO_NAO_ENCONTRADO
+                  mensagem: Livro com id 99 não encontrado
 
 
   /estudantes:
@@ -255,12 +289,30 @@ paths:
       responses:
         "201":
           description: Estudante criado com sucesso
+          content:
+            application/json:
+              example:
+                id: 3
+                nome: Maria Oliveira
+                email: maria@email.com
 
         "400":
           description: Dados inválidos
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: DADOS_INVALIDOS
+                  mensagem: Os dados enviados são inválidos.
 
         "409":
           description: E-mail já cadastrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: CONFLITO
+                  mensagem: Já existe um estudante cadastrado com este e-mail.
 
 
   /estudantes/{id}:
@@ -280,9 +332,21 @@ paths:
       responses:
         "200":
           description: Estudante encontrado
+          content:
+            application/json:
+              example:
+                id: 1
+                nome: Ana Silva
+                email: ana@email.com
 
         "404":
           description: Estudante não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: RECURSO_NAO_ENCONTRADO
+                  mensagem: Estudante com id 99 não encontrado
 
     put:
       tags:
@@ -295,6 +359,7 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
 
       requestBody:
         required: true
@@ -307,9 +372,21 @@ paths:
       responses:
         "200":
           description: Estudante atualizado
+          content:
+            application/json:
+              example:
+                id: 1
+                nome: Ana Silva Atualizada
+                email: ana.nova@email.com
 
         "404":
           description: Estudante não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: RECURSO_NAO_ENCONTRADO
+                  mensagem: Estudante com id 99 não encontrado
 
     patch:
       tags:
@@ -322,6 +399,7 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
 
       requestBody:
         required: true
@@ -333,9 +411,21 @@ paths:
       responses:
         "200":
           description: Estudante atualizado parcialmente
+          content:
+            application/json:
+              example:
+                id: 1
+                nome: Ana Silva
+                email: ana@email.com
 
         "404":
           description: Estudante não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: RECURSO_NAO_ENCONTRADO
+                  mensagem: Estudante com id 99 não encontrado
 
     delete:
       tags:
@@ -348,6 +438,7 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
 
       responses:
         "204":
@@ -355,6 +446,12 @@ paths:
 
         "404":
           description: Estudante não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: RECURSO_NAO_ENCONTRADO
+                  mensagem: Estudante com id 99 não encontrado
 
 
   /emprestimos:
@@ -392,9 +489,23 @@ paths:
       responses:
         "201":
           description: Empréstimo criado com sucesso
+          content:
+            application/json:
+              example:
+                id: 2
+                livroId: 1
+                estudanteId: 1
+                dataEmprestimo: "2026-09-14"
+                devolvido: false
 
         "404":
           description: Livro ou estudante não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: LIVRO_NAO_ENCONTRADO
+                  mensagem: Livro com id 99 não encontrado
 
 
   /emprestimos/{id}:
@@ -414,9 +525,23 @@ paths:
       responses:
         "200":
           description: Empréstimo encontrado
+          content:
+            application/json:
+              example:
+                id: 1
+                livroId: 1
+                estudanteId: 1
+                dataEmprestimo: "2026-09-01"
+                devolvido: false
 
         "404":
           description: Empréstimo não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: RECURSO_NAO_ENCONTRADO
+                  mensagem: Empréstimo com id 99 não encontrado
 
     put:
       tags:
@@ -429,6 +554,7 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
 
       requestBody:
         required: true
@@ -443,9 +569,23 @@ paths:
       responses:
         "200":
           description: Empréstimo atualizado
+          content:
+            application/json:
+              example:
+                id: 1
+                livroId: 1
+                estudanteId: 1
+                dataEmprestimo: "2026-09-14"
+                devolvido: true
 
         "404":
           description: Empréstimo não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: RECURSO_NAO_ENCONTRADO
+                  mensagem: Empréstimo com id 99 não encontrado
 
     patch:
       tags:
@@ -458,6 +598,7 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
 
       requestBody:
         required: true
@@ -469,9 +610,23 @@ paths:
       responses:
         "200":
           description: Empréstimo atualizado parcialmente
+          content:
+            application/json:
+              example:
+                id: 1
+                livroId: 1
+                estudanteId: 1
+                dataEmprestimo: "2026-09-01"
+                devolvido: true
 
         "404":
           description: Empréstimo não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: RECURSO_NAO_ENCONTRADO
+                  mensagem: Empréstimo com id 99 não encontrado
 
     delete:
       tags:
@@ -484,6 +639,7 @@ paths:
           required: true
           schema:
             type: integer
+          example: 1
 
       responses:
         "204":
@@ -491,6 +647,12 @@ paths:
 
         "404":
           description: Empréstimo não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: RECURSO_NAO_ENCONTRADO
+                  mensagem: Empréstimo com id 99 não encontrado
 
 
   /estudantes/{id}/emprestimos:
@@ -521,3 +683,9 @@ paths:
 
         "404":
           description: Estudante não encontrado
+          content:
+            application/json:
+              example:
+                erro:
+                  codigo: ESTUDANTE_NAO_ENCONTRADO
+                  mensagem: Estudante com id 99 não encontrado
