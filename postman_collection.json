@@ -1,0 +1,787 @@
+{
+  "info": {
+    "_postman_id": "b64b529f-22c7-4329-af88-ea4630dd6eec",
+    "name": "API Biblioteca Escolar",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58074041",
+    "_collection_link": "https://go.postman.co/collection/58074041-b64b529f-22c7-4329-af88-ea4630dd6eec?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Livros",
+      "item": [
+        {
+          "name": "GET - Listar livros",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/livros",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "livros"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Criar livro",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"titulo\": \"A Hora da Estrela\",\r\n    \"autor\": \"Clarice Lispector\",\r\n    \"genero\": \"romance\",\r\n    \"ano\": 1977\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/livros",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "livros"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT - Atualizar livro",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"titulo\": \"Dom Casmurro - Nova Edição\",\r\n    \"autor\": \"Machado de Assis\",\r\n    \"genero\": \"romance\",\r\n    \"ano\": 1899\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/livros/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "livros",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH - Atualizar livro parcialmente",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"genero\": \"literatura\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/livros/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "livros",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE - Excluir livro",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/livros/3",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "livros",
+                "3"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Filtro por gênero",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/livros?genero=romance",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "livros"
+              ],
+              "query": [
+                {
+                  "key": "genero",
+                  "value": "romance"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Busca por palavra-chave",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/livros?busca=dom",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "livros"
+              ],
+              "query": [
+                {
+                  "key": "busca",
+                  "value": "dom"
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Paginação",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/livros?page=1&limit=1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "livros"
+              ],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Estudantes",
+      "item": [
+        {
+          "name": "GET - Listar estudantes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/estudantes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "estudantes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Buscar estudante",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/estudantes/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "estudantes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Criar estudante",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Maria Oliveira\",\r\n    \"email\": \"maria@email.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/estudantes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "estudantes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT - Atualizar estudante",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Ana Silva Atualizada\",\r\n    \"email\": \"ana.atualizada@email.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/estudantes/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "estudantes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH - Atualizar estudante parcialmente",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Ana Silva\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/estudantes/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "estudantes",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE - Excluir estudante",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/estudantes/2",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "estudantes",
+                "2"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Erro 409 - E-mail duplicado",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"nome\": \"Outro Estudante\",\r\n    \"email\": \"ana@email.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/estudantes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "estudantes"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Erro 400 - Dados inválidos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"nome\": \"Estudante sem email\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/estudantes",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "estudantes"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Empréstimos",
+      "item": [
+        {
+          "name": "GET - Listar empréstimos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/emprestimos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "emprestimos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Buscar empréstimo",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/emprestimos/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "emprestimos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Criar empréstimo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"livroId\": 1,\r\n    \"estudanteId\": 1,\r\n    \"dataEmprestimo\": \"2026-09-14\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/emprestimos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "emprestimos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PUT - Atualizar empréstimo",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"livroId\": 1,\r\n    \"estudanteId\": 1,\r\n    \"dataEmprestimo\": \"2026-09-14\",\r\n    \"devolvido\": true\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/emprestimos/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "emprestimos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "PATCH - Atualizar empréstimo parcialmente",
+          "request": {
+            "method": "PATCH",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"devolvido\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/emprestimos/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "emprestimos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "DELETE - Excluir empréstimo",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/emprestimos/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "emprestimos",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Empréstimos do estudante",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/estudantes/1/emprestimos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "estudantes",
+                "1",
+                "emprestimos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Erro 404 - Livro não encontrado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/livros/99",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "livros",
+                "99"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Erro 400 - Dados inválidos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"autor\": \"Machado de Assis\",\r\n    \"genero\": \"romance\",\r\n    \"ano\": 1899\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/livros",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "livros"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Erro 404 - Estudante não encontrado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/estudantes/99",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "estudantes",
+                "99"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "POST - Erro 404 - Livro não encontrado",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"livroId\": 99,\r\n  \"estudanteId\": 1,\r\n  \"dataEmprestimo\": \"2026-09-14\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:3000/emprestimos",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "emprestimos"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "GET - Erro 404 - Empréstimo não encontrado",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/emprestimos/99",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "3000",
+              "path": [
+                "emprestimos",
+                "99"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "GET - Buscar livro",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:3000/livros/1",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "3000",
+          "path": [
+            "livros",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
