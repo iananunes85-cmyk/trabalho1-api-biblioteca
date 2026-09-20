@@ -15,12 +15,6 @@ const {
 // Listar empréstimos
 router.get("/emprestimos", listarEmprestimos);
 
-// Listar empréstimos de um estudante
-router.get(
-  "/estudantes/:id/emprestimos",
-  listarEmprestimosDoEstudante
-);
-
 // Buscar empréstimo por ID
 router.get("/emprestimos/:id", buscarEmprestimo);
 
@@ -35,5 +29,11 @@ router.patch("/emprestimos/:id", atualizarParcialmenteEmprestimo);
 
 // Excluir empréstimo
 router.delete("/emprestimos/:id", excluirEmprestimo);
+
+// Listar empréstimos de um estudante
+router.get(
+  "/estudantes/:id/emprestimos",
+  listarEmprestimosDoEstudante
+);
 
 module.exports = router;

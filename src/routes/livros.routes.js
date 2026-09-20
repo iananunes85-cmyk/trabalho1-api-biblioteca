@@ -8,7 +8,8 @@ const {
   criarLivro,
   atualizarLivro,
   atualizarParcialmenteLivro,
-  excluirLivro
+  excluirLivro,
+  buscarLivroComRelacionamentos
 } = require("../controllers/livros.controller");
 
 const { body } = require("express-validator");
@@ -19,6 +20,12 @@ router.get("/livros", listarLivros);
 
 // Buscar livro por ID
 router.get("/livros/:id", buscarLivro);
+
+// Buscar livro com categorias e empréstimos
+router.get(
+  "/livros/:id/relacionamentos",
+  buscarLivroComRelacionamentos
+);
 
 // Criar livro
 router.post(

@@ -1,19 +1,24 @@
 {
   "name": "trabalho1",
   "version": "1.0.0",
-  "description": "API REST Biblioteca Escolar",
+  "description": "API Biblioteca Escolar - Trabalho 2",
   "main": "src/app.js",
   "scripts": {
-    "start": "node src/app.js"
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js",
+    "seed": "node prisma/seed.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "express": "^5.2.1",
-    "express-validator": "^7.3.0",
+    "@prisma/adapter-better-sqlite3": "^7.10.0",
+    "@prisma/client": "7.10.0",
+    "better-sqlite3": "^12.4.1",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
     "swagger-ui-express": "^5.0.1",
     "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "prisma": "7.10.0"
   }
 }

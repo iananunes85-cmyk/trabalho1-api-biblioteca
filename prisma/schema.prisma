@@ -1,0 +1,68 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Estudante {
+  id          Int          @id @default(autoincrement())
+  nome        String
+  email       String       @unique
+  created_at  DateTime     @default(now())
+  updated_at  DateTime     @updatedAt
+
+  emprestimos Emprestimo[]
+}
+
+model Livro {
+  id                   Int             @id @default(autoincrement())
+  titulo               String
+  autor                String
+  genero               String
+  ano                  Int
+  exemplaresDisponiveis Int            @default(1)
+  created_at           DateTime        @default(now())
+  updated_at           DateTime        @updatedAt
+
+  emprestimos           Emprestimo[]
+  categorias            LivroCategoria[]
+}
+
+model Emprestimo {
+  id             Int       @id @default(autoincrement())
+  livroId        Int
+  estudanteId    Int
+  dataEmprestimo DateTime  @default(now())
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+
+  livro          Livro      @relation(fields: [livroId], references: [id])
+  estudante      Estudante  @relation(fields: [estudanteId], references: [id])
+
+  @@index([livroId])
+  @@index([estudanteId])
+}
+
+model Categoria {
+  id          Int             @id @default(autoincrement())
+  nome        String          @unique
+  created_at  DateTime        @default(now())
+  updated_at  DateTime        @updatedAt
+
+  livros      LivroCategoria[]
+}
+
+model LivroCategoria {
+  livroId      Int
+  categoriaId  Int
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+
+  livro        Livro     @relation(fields: [livroId], references: [id])
+  categoria    Categoria @relation(fields: [categoriaId], references: [id])
+
+  @@id([livroId, categoriaId])
+  @@index([categoriaId])
+}
