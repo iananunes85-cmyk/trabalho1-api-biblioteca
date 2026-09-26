@@ -1,10 +1,9 @@
-const categoriasRepository = require("../repositories/categorias.repository");
+const categoriasService = require("../services/categorias.service");
 
-// Listar categorias
 async function listarCategorias(req, res, next) {
   try {
     const categorias =
-      await categoriasRepository.listarCategorias();
+      await categoriasService.listarCategorias();
 
     res.status(200).json(categorias);
   } catch (erro) {
@@ -12,52 +11,54 @@ async function listarCategorias(req, res, next) {
   }
 }
 
-
-// Buscar categoria por ID
 async function buscarCategoria(req, res, next) {
   try {
     const id = Number(req.params.id);
 
     const categoria =
-      await categoriasRepository.buscarCategoriaPorId(id);
+      await categoriasService.buscarCategoriaPorId(id);
 
-    if (!categoria) {
+    res.status(200).json(categoria);
+  } catch (erro) {
+    if (erro.codigo === "CATEGORIA_NAO_ENCONTRADA") {
       return res.status(404).json({
         erro: {
           codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Categoria com id ${id} não encontrada`
+          mensagem: erro.message
         }
       });
     }
 
-    res.status(200).json(categoria);
-  } catch (erro) {
     next(erro);
   }
 }
 
-
-// Criar categoria
-async function criarCategoria(req, res, next) {
+async function buscarCategoriaComLivros(req, res, next) {
   try {
-    const { nome } = req.body;
+    const id = Number(req.params.id);
 
-    const categoriaExiste =
-      await categoriasRepository.buscarCategoriaPorNome(nome);
+    const categoria =
+      await categoriasService.buscarCategoriaComLivros(id);
 
-    if (categoriaExiste) {
-      return res.status(409).json({
+    res.status(200).json(categoria);
+  } catch (erro) {
+    if (erro.codigo === "CATEGORIA_NAO_ENCONTRADA") {
+      return res.status(404).json({
         erro: {
-          codigo: "CONFLITO",
-          mensagem: "Já existe uma categoria com este nome."
+          codigo: "RECURSO_NAO_ENCONTRADO",
+          mensagem: erro.message
         }
       });
     }
 
+    next(erro);
+  }
+}
+
+async function criarCategoria(req, res, next) {
+  try {
     const novaCategoria =
-      await categoriasRepository.criarCategoria({
-        nome
-      });
+      await categoriasService.criarCategoria(req.body);
 
     res.status(201).json(novaCategoria);
   } catch (erro) {
@@ -65,66 +66,31 @@ async function criarCategoria(req, res, next) {
   }
 }
 
-
-// Atualizar categoria
 async function atualizarCategoria(req, res, next) {
   try {
     const id = Number(req.params.id);
 
-    const categoria =
-      await categoriasRepository.buscarCategoriaPorId(id);
-
-    if (!categoria) {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Categoria com id ${id} não encontrada`
-        }
-      });
-    }
-
-    const { nome } = req.body;
-
-    if (!nome) {
-      return res.status(400).json({
-        erro: {
-          codigo: "DADOS_INVALIDOS",
-          mensagem: "O nome da categoria é obrigatório."
-        }
-      });
-    }
-
-    const categoriaExiste =
-      await categoriasRepository.buscarCategoriaPorNome(nome);
-
-    if (
-      categoriaExiste &&
-      categoriaExiste.id !== id
-    ) {
-      return res.status(409).json({
-        erro: {
-          codigo: "CONFLITO",
-          mensagem: "Já existe uma categoria com este nome."
-        }
-      });
-    }
-
     const categoriaAtualizada =
-      await categoriasRepository.atualizarCategoria(
+      await categoriasService.atualizarCategoria(
         id,
-        {
-          nome
-        }
+        req.body
       );
 
     res.status(200).json(categoriaAtualizada);
   } catch (erro) {
+    if (erro.codigo === "CATEGORIA_NAO_ENCONTRADA") {
+      return res.status(404).json({
+        erro: {
+          codigo: "RECURSO_NAO_ENCONTRADO",
+          mensagem: erro.message
+        }
+      });
+    }
+
     next(erro);
   }
 }
 
-
-// Atualizar parcialmente categoria
 async function atualizarParcialmenteCategoria(
   req,
   res,
@@ -132,18 +98,6 @@ async function atualizarParcialmenteCategoria(
 ) {
   try {
     const id = Number(req.params.id);
-
-    const categoria =
-      await categoriasRepository.buscarCategoriaPorId(id);
-
-    if (!categoria) {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Categoria com id ${id} não encontrada`
-        }
-      });
-    }
 
     const camposPermitidos = ["nome"];
 
@@ -156,66 +110,50 @@ async function atualizarParcialmenteCategoria(
       return res.status(400).json({
         erro: {
           codigo: "DADOS_INVALIDOS",
-          mensagem: "Nenhum campo válido foi informado."
+          mensagem:
+            "Nenhum campo válido foi informado."
         }
       });
     }
 
-    if (req.body.nome) {
-      const categoriaExiste =
-        await categoriasRepository.buscarCategoriaPorNome(
-          req.body.nome
-        );
-
-      if (
-        categoriaExiste &&
-        categoriaExiste.id !== id
-      ) {
-        return res.status(409).json({
-          erro: {
-            codigo: "CONFLITO",
-            mensagem: "Já existe uma categoria com este nome."
-          }
-        });
-      }
-    }
-
     const categoriaAtualizada =
-      await categoriasRepository.atualizarParcialmenteCategoria(
+      await categoriasService.atualizarParcialmenteCategoria(
         id,
         req.body
       );
 
     res.status(200).json(categoriaAtualizada);
   } catch (erro) {
-    next(erro);
-  }
-}
-
-
-// Excluir categoria
-async function excluirCategoria(req, res, next) {
-  try {
-    const id = Number(req.params.id);
-
-    const categoria =
-      await categoriasRepository.buscarCategoriaPorId(id);
-
-    if (!categoria) {
+    if (erro.codigo === "CATEGORIA_NAO_ENCONTRADA") {
       return res.status(404).json({
         erro: {
           codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Categoria com id ${id} não encontrada`
+          mensagem: erro.message
         }
       });
     }
 
-    await categoriasRepository.excluirCategoria(id);
+    next(erro);
+  }
+}
+
+async function excluirCategoria(req, res, next) {
+  try {
+    const id = Number(req.params.id);
+
+    await categoriasService.excluirCategoria(id);
 
     res.status(204).send();
   } catch (erro) {
+    if (erro.codigo === "CATEGORIA_NAO_ENCONTRADA") {
+      return res.status(404).json({
+        erro: {
+          codigo: "RECURSO_NAO_ENCONTRADO",
+          mensagem: erro.message
+        }
+      });
+    }
 
-    // Impede exclusão quando existem livros relacionados
     if (erro.code === "P2003") {
       return res.status(409).json({
         erro: {
@@ -230,41 +168,12 @@ async function excluirCategoria(req, res, next) {
   }
 }
 
-
-// Buscar categoria com os livros relacionados
-async function buscarCategoriaComLivros(
-  req,
-  res,
-  next
-) {
-  try {
-    const id = Number(req.params.id);
-
-    const categoria =
-      await categoriasRepository.buscarCategoriaComLivros(id);
-
-    if (!categoria) {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Categoria com id ${id} não encontrada`
-        }
-      });
-    }
-
-    res.status(200).json(categoria);
-  } catch (erro) {
-    next(erro);
-  }
-}
-
-
 module.exports = {
   listarCategorias,
   buscarCategoria,
+  buscarCategoriaComLivros,
   criarCategoria,
   atualizarCategoria,
   atualizarParcialmenteCategoria,
-  excluirCategoria,
-  buscarCategoriaComLivros
+  excluirCategoria
 };

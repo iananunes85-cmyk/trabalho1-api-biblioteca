@@ -1,6 +1,5 @@
-const livrosRepository = require("../repositories/livros.repository");
+const livrosService = require("../services/livros.service");
 
-// Listar livros
 async function listarLivros(req, res, next) {
   try {
     const { genero, busca, ordenarPor, ordem } = req.query;
@@ -8,7 +7,7 @@ async function listarLivros(req, res, next) {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 10;
 
-    const resultado = await livrosRepository.listarLivros({
+    const resultado = await livrosService.listarLivros({
       genero,
       busca,
       page,
@@ -17,7 +16,9 @@ async function listarLivros(req, res, next) {
       ordem
     });
 
-    const totalPaginas = Math.ceil(resultado.total / limit);
+    const totalPaginas = Math.ceil(
+      resultado.total / limit
+    );
 
     res.status(200).json({
       dados: resultado.livros,
@@ -33,34 +34,31 @@ async function listarLivros(req, res, next) {
   }
 }
 
-
-// Buscar livro por ID
 async function buscarLivro(req, res, next) {
   try {
     const id = Number(req.params.id);
 
-    const livro = await livrosRepository.buscarLivroPorId(id);
+    const livro = await livrosService.buscarLivroPorId(id);
 
-    if (!livro) {
+    res.status(200).json(livro);
+  } catch (erro) {
+    if (erro.codigo === "LIVRO_NAO_ENCONTRADO") {
       return res.status(404).json({
         erro: {
           codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Livro com id ${id} não encontrado`
+          mensagem: erro.message
         }
       });
     }
 
-    res.status(200).json(livro);
-  } catch (erro) {
     next(erro);
   }
 }
 
-
-// Criar livro
 async function criarLivro(req, res, next) {
   try {
-    const novoLivro = await livrosRepository.criarLivro(req.body);
+    const novoLivro =
+      await livrosService.criarLivro(req.body);
 
     res.status(201).json(novoLivro);
   } catch (erro) {
@@ -68,48 +66,38 @@ async function criarLivro(req, res, next) {
   }
 }
 
-
-// Atualizar livro
 async function atualizarLivro(req, res, next) {
   try {
     const id = Number(req.params.id);
 
-    const livro = await livrosRepository.buscarLivroPorId(id);
+    const livroAtualizado =
+      await livrosService.atualizarLivro(
+        id,
+        req.body
+      );
 
-    if (!livro) {
+    res.status(200).json(livroAtualizado);
+  } catch (erro) {
+    if (erro.codigo === "LIVRO_NAO_ENCONTRADO") {
       return res.status(404).json({
         erro: {
           codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Livro com id ${id} não encontrado`
+          mensagem: erro.message
         }
       });
     }
 
-    const livroAtualizado =
-      await livrosRepository.atualizarLivro(id, req.body);
-
-    res.status(200).json(livroAtualizado);
-  } catch (erro) {
     next(erro);
   }
 }
 
-
-// Atualizar parcialmente livro
-async function atualizarParcialmenteLivro(req, res, next) {
+async function atualizarParcialmenteLivro(
+  req,
+  res,
+  next
+) {
   try {
     const id = Number(req.params.id);
-
-    const livro = await livrosRepository.buscarLivroPorId(id);
-
-    if (!livro) {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Livro com id ${id} não encontrado`
-        }
-      });
-    }
 
     const camposPermitidos = [
       "titulo",
@@ -120,54 +108,58 @@ async function atualizarParcialmenteLivro(req, res, next) {
     ];
 
     const camposInformados = Object.keys(req.body)
-      .filter(campo => camposPermitidos.includes(campo));
+      .filter(campo =>
+        camposPermitidos.includes(campo)
+      );
 
     if (camposInformados.length === 0) {
       return res.status(400).json({
         erro: {
           codigo: "DADOS_INVALIDOS",
-          mensagem: "Nenhum campo válido foi informado."
+          mensagem:
+            "Nenhum campo válido foi informado."
         }
       });
     }
 
     const livroAtualizado =
-      await livrosRepository.atualizarParcialmenteLivro(
+      await livrosService.atualizarParcialmenteLivro(
         id,
         req.body
       );
 
     res.status(200).json(livroAtualizado);
   } catch (erro) {
-    next(erro);
-  }
-}
-
-
-// Excluir livro
-async function excluirLivro(req, res, next) {
-  try {
-    const id = Number(req.params.id);
-
-    const livro =
-      await livrosRepository.buscarLivroPorId(id);
-
-    if (!livro) {
+    if (erro.codigo === "LIVRO_NAO_ENCONTRADO") {
       return res.status(404).json({
         erro: {
           codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Livro com id ${id} não encontrado`
+          mensagem: erro.message
         }
       });
     }
 
-    await livrosRepository.excluirLivro(id);
+    next(erro);
+  }
+}
+
+async function excluirLivro(req, res, next) {
+  try {
+    const id = Number(req.params.id);
+
+    await livrosService.excluirLivro(id);
 
     res.status(204).send();
-
   } catch (erro) {
+    if (erro.codigo === "LIVRO_NAO_ENCONTRADO") {
+      return res.status(404).json({
+        erro: {
+          codigo: "RECURSO_NAO_ENCONTRADO",
+          mensagem: erro.message
+        }
+      });
+    }
 
-    // Impede a exclusão quando existem empréstimos relacionados
     if (erro.code === "P2003") {
       return res.status(409).json({
         erro: {
@@ -182,30 +174,33 @@ async function excluirLivro(req, res, next) {
   }
 }
 
-
-// Buscar livro com relacionamentos
-async function buscarLivroComRelacionamentos(req, res, next) {
+async function buscarLivroComRelacionamentos(
+  req,
+  res,
+  next
+) {
   try {
     const id = Number(req.params.id);
 
     const livro =
-      await livrosRepository.buscarLivroComRelacionamentos(id);
+      await livrosService.buscarLivroComRelacionamentos(
+        id
+      );
 
-    if (!livro) {
+    res.status(200).json(livro);
+  } catch (erro) {
+    if (erro.codigo === "LIVRO_NAO_ENCONTRADO") {
       return res.status(404).json({
         erro: {
           codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Livro com id ${id} não encontrado`
+          mensagem: erro.message
         }
       });
     }
 
-    res.status(200).json(livro);
-  } catch (erro) {
     next(erro);
   }
 }
-
 
 module.exports = {
   listarLivros,

@@ -1,14 +1,19 @@
-# API Biblioteca Escolar
+# Trabalho 2 - API Biblioteca Escolar
 
-Projeto desenvolvido para a disciplina de Desenvolvimento de APIs REST, com evolução do Trabalho 1 para persistência de dados utilizando ORM.
+API REST para gerenciamento de uma biblioteca escolar, desenvolvida com Node.js, Express, Prisma e SQLite.
 
-## Descrição
+## Objetivo
 
-A API Biblioteca Escolar permite o gerenciamento de livros, estudantes, categorias e empréstimos.
+O projeto tem como objetivo desenvolver uma API REST organizada em camadas, permitindo o gerenciamento de:
 
-Nesta etapa do projeto, os dados passaram a ser armazenados em banco de dados SQLite, utilizando o Prisma ORM.
+- Livros
+- Estudantes
+- Empréstimos
+- Categorias
 
-O projeto também possui migrations, seed, relacionamentos entre as entidades, validações, paginação, filtros, ordenação e transações.
+Nesta etapa, a arquitetura foi reorganizada para separar as responsabilidades entre rotas, controladores, serviços e repositórios, reduzindo o acoplamento e facilitando a manutenção e a testabilidade do código.
+
+---
 
 ## Tecnologias utilizadas
 
@@ -16,33 +21,27 @@ O projeto também possui migrations, seed, relacionamentos entre as entidades, v
 - Express
 - Prisma ORM
 - SQLite
-- better-sqlite3
+- Better SQLite3
 - Express Validator
-- Swagger UI
-- OpenAPI 3.0
-- YAML
+- Swagger / OpenAPI
 - Postman
+- Git e GitHub
 
-## Estrutura do projeto
+---
+
+## Arquitetura do projeto
+
+A aplicação utiliza uma arquitetura em camadas:
 
 ```text
-trabalho2/
-├── prisma/
-│   ├── migrations/
-│   ├── schema.prisma
-│   └── seed.js
-├── src/
-│   ├── controllers/
-│   ├── database/
-│   ├── docs/
-│   ├── middlewares/
-│   ├── repositories/
-│   ├── routes/
-│   └── app.js
-├── .env
-├── .env.example
-├── .gitignore
-├── package.json
-├── postman_collection.json
-├── prisma.config.ts
-└── README.md
+Routes
+   ↓
+Controllers
+   ↓
+Services
+   ↓
+Repositories
+   ↓
+Prisma
+   ↓
+SQLite

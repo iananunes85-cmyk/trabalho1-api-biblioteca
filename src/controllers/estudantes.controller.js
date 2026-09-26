@@ -1,10 +1,9 @@
-const estudantesRepository = require("../repositories/estudantes.repository");
+const estudantesService = require("../services/estudantes.service");
 
-// Listar estudantes
 async function listarEstudantes(req, res, next) {
   try {
     const estudantes =
-      await estudantesRepository.listarEstudantes();
+      await estudantesService.listarEstudantes();
 
     res.status(200).json(estudantes);
   } catch (erro) {
@@ -12,113 +11,82 @@ async function listarEstudantes(req, res, next) {
   }
 }
 
-
-// Buscar estudante por ID
 async function buscarEstudante(req, res, next) {
   try {
     const id = Number(req.params.id);
 
     const estudante =
-      await estudantesRepository.buscarEstudantePorId(id);
-
-    if (!estudante) {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Estudante com id ${id} não encontrado`
-        }
-      });
-    }
+      await estudantesService.buscarEstudantePorId(id);
 
     res.status(200).json(estudante);
   } catch (erro) {
-    next(erro);
-  }
-}
-
-
-// Criar estudante
-async function criarEstudante(req, res, next) {
-  try {
-    const { nome, email } = req.body;
-
-    const emailExiste =
-      await estudantesRepository.buscarEstudantePorEmail(email);
-
-    if (emailExiste) {
-      return res.status(409).json({
+    if (erro.codigo === "ESTUDANTE_NAO_ENCONTRADO") {
+      return res.status(404).json({
         erro: {
-          codigo: "CONFLITO",
-          mensagem:
-            "Já existe um estudante cadastrado com este e-mail."
+          codigo: "RECURSO_NAO_ENCONTRADO",
+          mensagem: erro.message
         }
       });
     }
 
-    const novoEstudante =
-      await estudantesRepository.criarEstudante({
-        nome,
-        email
-      });
-
-    res.status(201).json(novoEstudante);
-  } catch (erro) {
     next(erro);
   }
 }
 
+async function criarEstudante(req, res, next) {
+  try {
+    const novoEstudante =
+      await estudantesService.criarEstudante(req.body);
 
-// Atualizar estudante
+    res.status(201).json(novoEstudante);
+  } catch (erro) {
+    if (erro.codigo === "EMAIL_DUPLICADO") {
+      return res.status(409).json({
+        erro: {
+          codigo: "CONFLITO",
+          mensagem: erro.message
+        }
+      });
+    }
+
+    next(erro);
+  }
+}
+
 async function atualizarEstudante(req, res, next) {
   try {
     const id = Number(req.params.id);
 
-    const estudante =
-      await estudantesRepository.buscarEstudantePorId(id);
-
-    if (!estudante) {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Estudante com id ${id} não encontrado`
-        }
-      });
-    }
-
-    const { nome, email } = req.body;
-
-    if (email && email !== estudante.email) {
-      const emailExiste =
-        await estudantesRepository.buscarEstudantePorEmail(email);
-
-      if (emailExiste) {
-        return res.status(409).json({
-          erro: {
-            codigo: "CONFLITO",
-            mensagem:
-              "Já existe um estudante cadastrado com este e-mail."
-          }
-        });
-      }
-    }
-
     const estudanteAtualizado =
-      await estudantesRepository.atualizarEstudante(
+      await estudantesService.atualizarEstudante(
         id,
-        {
-          nome,
-          email
-        }
+        req.body
       );
 
     res.status(200).json(estudanteAtualizado);
   } catch (erro) {
+    if (erro.codigo === "ESTUDANTE_NAO_ENCONTRADO") {
+      return res.status(404).json({
+        erro: {
+          codigo: "RECURSO_NAO_ENCONTRADO",
+          mensagem: erro.message
+        }
+      });
+    }
+
+    if (erro.codigo === "EMAIL_DUPLICADO") {
+      return res.status(409).json({
+        erro: {
+          codigo: "CONFLITO",
+          mensagem: erro.message
+        }
+      });
+    }
+
     next(erro);
   }
 }
 
-
-// Atualizar parcialmente estudante
 async function atualizarParcialmenteEstudante(
   req,
   res,
@@ -127,22 +95,7 @@ async function atualizarParcialmenteEstudante(
   try {
     const id = Number(req.params.id);
 
-    const estudante =
-      await estudantesRepository.buscarEstudantePorId(id);
-
-    if (!estudante) {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Estudante com id ${id} não encontrado`
-        }
-      });
-    }
-
-    const camposPermitidos = [
-      "nome",
-      "email"
-    ];
+    const camposPermitidos = ["nome", "email"];
 
     const camposInformados = Object.keys(req.body)
       .filter(campo =>
@@ -153,68 +106,59 @@ async function atualizarParcialmenteEstudante(
       return res.status(400).json({
         erro: {
           codigo: "DADOS_INVALIDOS",
-          mensagem: "Nenhum campo válido foi informado."
+          mensagem:
+            "Nenhum campo válido foi informado."
         }
       });
     }
 
-    if (
-      req.body.email &&
-      req.body.email !== estudante.email
-    ) {
-      const emailExiste =
-        await estudantesRepository.buscarEstudantePorEmail(
-          req.body.email
-        );
-
-      if (emailExiste) {
-        return res.status(409).json({
-          erro: {
-            codigo: "CONFLITO",
-            mensagem:
-              "Já existe um estudante cadastrado com este e-mail."
-          }
-        });
-      }
-    }
-
     const estudanteAtualizado =
-      await estudantesRepository.atualizarParcialmenteEstudante(
+      await estudantesService.atualizarParcialmenteEstudante(
         id,
         req.body
       );
 
     res.status(200).json(estudanteAtualizado);
   } catch (erro) {
-    next(erro);
-  }
-}
-
-
-// Excluir estudante
-async function excluirEstudante(req, res, next) {
-  try {
-    const id = Number(req.params.id);
-
-    const estudante =
-      await estudantesRepository.buscarEstudantePorId(id);
-
-    if (!estudante) {
+    if (erro.codigo === "ESTUDANTE_NAO_ENCONTRADO") {
       return res.status(404).json({
         erro: {
           codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: `Estudante com id ${id} não encontrado`
+          mensagem: erro.message
         }
       });
     }
 
-    await estudantesRepository.excluirEstudante(id);
+    if (erro.codigo === "EMAIL_DUPLICADO") {
+      return res.status(409).json({
+        erro: {
+          codigo: "CONFLITO",
+          mensagem: erro.message
+        }
+      });
+    }
+
+    next(erro);
+  }
+}
+
+async function excluirEstudante(req, res, next) {
+  try {
+    const id = Number(req.params.id);
+
+    await estudantesService.excluirEstudante(id);
 
     res.status(204).send();
-
   } catch (erro) {
+    if (erro.codigo === "ESTUDANTE_NAO_ENCONTRADO") {
+      return res.status(404).json({
+        erro: {
+          codigo: "RECURSO_NAO_ENCONTRADO",
+          mensagem: erro.message
+        }
+      });
+    }
 
-    // Impede a exclusão quando existem empréstimos relacionados
     if (erro.code === "P2003") {
       return res.status(409).json({
         erro: {
@@ -228,7 +172,6 @@ async function excluirEstudante(req, res, next) {
     next(erro);
   }
 }
-
 
 module.exports = {
   listarEstudantes,

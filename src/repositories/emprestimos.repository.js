@@ -13,7 +13,6 @@ async function listarEmprestimos() {
   });
 }
 
-
 // Buscar empréstimo por ID
 async function buscarEmprestimoPorId(id) {
   return prisma.emprestimo.findUnique({
@@ -27,8 +26,7 @@ async function buscarEmprestimoPorId(id) {
   });
 }
 
-
-// Verificar se livro existe
+// Buscar livro por ID
 async function buscarLivroPorId(id) {
   return prisma.livro.findUnique({
     where: {
@@ -37,8 +35,7 @@ async function buscarLivroPorId(id) {
   });
 }
 
-
-// Verificar se estudante existe
+// Buscar estudante por ID
 async function buscarEstudantePorId(id) {
   return prisma.estudante.findUnique({
     where: {
@@ -47,7 +44,6 @@ async function buscarEstudantePorId(id) {
   });
 }
 
-
 // Criar empréstimo com transação
 async function criarEmprestimo({
   livroId,
@@ -55,45 +51,14 @@ async function criarEmprestimo({
   dataEmprestimo
 }) {
   return prisma.$transaction(async (tx) => {
-
-    const livro = await tx.livro.findUnique({
-      where: {
-        id: livroId
-      }
-    });
-
-    if (!livro) {
-      const erro = new Error("Livro não encontrado.");
-      erro.codigo = "LIVRO_NAO_ENCONTRADO";
-      throw erro;
-    }
-
-    if (livro.exemplaresDisponiveis <= 0) {
-      const erro = new Error(
-        "Não há exemplares disponíveis para empréstimo."
-      );
-      erro.codigo = "LIVRO_SEM_EXEMPLARES";
-      throw erro;
-    }
-
-    const estudante = await tx.estudante.findUnique({
-      where: {
-        id: estudanteId
-      }
-    });
-
-    if (!estudante) {
-      const erro = new Error("Estudante não encontrado.");
-      erro.codigo = "ESTUDANTE_NAO_ENCONTRADO";
-      throw erro;
-    }
-
     const emprestimo = await tx.emprestimo.create({
       data: {
         livroId,
         estudanteId,
         ...(dataEmprestimo
-          ? { dataEmprestimo: new Date(dataEmprestimo) }
+          ? {
+              dataEmprestimo: new Date(dataEmprestimo)
+            }
           : {})
       },
       include: {
@@ -117,7 +82,6 @@ async function criarEmprestimo({
   });
 }
 
-
 // Atualizar empréstimo
 async function atualizarEmprestimo(
   id,
@@ -135,7 +99,9 @@ async function atualizarEmprestimo(
       livroId,
       estudanteId,
       ...(dataEmprestimo
-        ? { dataEmprestimo: new Date(dataEmprestimo) }
+        ? {
+            dataEmprestimo: new Date(dataEmprestimo)
+          }
         : {})
     },
     include: {
@@ -145,9 +111,11 @@ async function atualizarEmprestimo(
   });
 }
 
-
 // Atualização parcial
-async function atualizarParcialmenteEmprestimo(id, dados) {
+async function atualizarParcialmenteEmprestimo(
+  id,
+  dados
+) {
   const data = {};
 
   if (dados.livroId !== undefined) {
@@ -159,7 +127,8 @@ async function atualizarParcialmenteEmprestimo(id, dados) {
   }
 
   if (dados.dataEmprestimo !== undefined) {
-    data.dataEmprestimo = new Date(dados.dataEmprestimo);
+    data.dataEmprestimo =
+      new Date(dados.dataEmprestimo);
   }
 
   return prisma.emprestimo.update({
@@ -174,7 +143,6 @@ async function atualizarParcialmenteEmprestimo(id, dados) {
   });
 }
 
-
 // Excluir empréstimo
 async function excluirEmprestimo(id) {
   return prisma.emprestimo.delete({
@@ -184,9 +152,10 @@ async function excluirEmprestimo(id) {
   });
 }
 
-
 // Listar empréstimos de um estudante
-async function listarEmprestimosDoEstudante(estudanteId) {
+async function listarEmprestimosDoEstudante(
+  estudanteId
+) {
   return prisma.emprestimo.findMany({
     where: {
       estudanteId
@@ -200,7 +169,6 @@ async function listarEmprestimosDoEstudante(estudanteId) {
     }
   });
 }
-
 
 module.exports = {
   listarEmprestimos,
