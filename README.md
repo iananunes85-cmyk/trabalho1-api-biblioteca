@@ -13,6 +13,8 @@ O projeto tem como objetivo desenvolver uma API REST organizada em camadas, perm
 
 Nesta etapa, a arquitetura foi reorganizada para separar as responsabilidades entre rotas, controladores, serviços e repositórios, reduzindo o acoplamento e facilitando a manutenção e a testabilidade do código.
 
+Também foram aplicados princípios da arquitetura MVC, adaptados ao contexto de uma API REST.
+
 ---
 
 ## Tecnologias utilizadas
@@ -35,6 +37,8 @@ A aplicação utiliza uma arquitetura em camadas:
 
 ```text
 Routes
+   ↓
+Middlewares
    ↓
 Controllers
    ↓
