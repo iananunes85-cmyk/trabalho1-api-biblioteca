@@ -42,15 +42,6 @@ async function buscarLivro(req, res, next) {
 
     res.status(200).json(livro);
   } catch (erro) {
-    if (erro.codigo === "LIVRO_NAO_ENCONTRADO") {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: erro.message
-        }
-      });
-    }
-
     next(erro);
   }
 }
@@ -78,15 +69,6 @@ async function atualizarLivro(req, res, next) {
 
     res.status(200).json(livroAtualizado);
   } catch (erro) {
-    if (erro.codigo === "LIVRO_NAO_ENCONTRADO") {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: erro.message
-        }
-      });
-    }
-
     next(erro);
   }
 }
@@ -99,29 +81,6 @@ async function atualizarParcialmenteLivro(
   try {
     const id = Number(req.params.id);
 
-    const camposPermitidos = [
-      "titulo",
-      "autor",
-      "genero",
-      "ano",
-      "exemplaresDisponiveis"
-    ];
-
-    const camposInformados = Object.keys(req.body)
-      .filter(campo =>
-        camposPermitidos.includes(campo)
-      );
-
-    if (camposInformados.length === 0) {
-      return res.status(400).json({
-        erro: {
-          codigo: "DADOS_INVALIDOS",
-          mensagem:
-            "Nenhum campo válido foi informado."
-        }
-      });
-    }
-
     const livroAtualizado =
       await livrosService.atualizarParcialmenteLivro(
         id,
@@ -130,15 +89,6 @@ async function atualizarParcialmenteLivro(
 
     res.status(200).json(livroAtualizado);
   } catch (erro) {
-    if (erro.codigo === "LIVRO_NAO_ENCONTRADO") {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: erro.message
-        }
-      });
-    }
-
     next(erro);
   }
 }
@@ -151,25 +101,6 @@ async function excluirLivro(req, res, next) {
 
     res.status(204).send();
   } catch (erro) {
-    if (erro.codigo === "LIVRO_NAO_ENCONTRADO") {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: erro.message
-        }
-      });
-    }
-
-    if (erro.code === "P2003") {
-      return res.status(409).json({
-        erro: {
-          codigo: "CONFLITO_INTEGRIDADE",
-          mensagem:
-            "Não é possível excluir este livro porque existem empréstimos relacionados a ele."
-        }
-      });
-    }
-
     next(erro);
   }
 }
@@ -189,15 +120,6 @@ async function buscarLivroComRelacionamentos(
 
     res.status(200).json(livro);
   } catch (erro) {
-    if (erro.codigo === "LIVRO_NAO_ENCONTRADO") {
-      return res.status(404).json({
-        erro: {
-          codigo: "RECURSO_NAO_ENCONTRADO",
-          mensagem: erro.message
-        }
-      });
-    }
-
     next(erro);
   }
 }

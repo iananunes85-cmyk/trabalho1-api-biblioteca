@@ -3,6 +3,19 @@
 function tratarErro(err, req, res, next) {
   console.error(err);
 
+  // Erros de negócio
+
+  if (err.codigo === "LIVRO_NAO_ENCONTRADO") {
+    return res.status(404).json({
+      erro: {
+        codigo: "RECURSO_NAO_ENCONTRADO",
+        mensagem: err.message
+      }
+    });
+  }
+
+  // Erros do Prisma
+
   // Violação de campo UNIQUE
   if (err.code === "P2002") {
     return res.status(409).json({

@@ -52,10 +52,63 @@ router.post(
 );
 
 // Atualizar livro
-router.put("/livros/:id", atualizarLivro);
+router.put(
+  "/livros/:id",
+  [
+    body("titulo")
+      .notEmpty()
+      .withMessage("O título é obrigatório."),
+
+    body("autor")
+      .notEmpty()
+      .withMessage("O autor é obrigatório."),
+
+    body("genero")
+      .notEmpty()
+      .withMessage("O gênero é obrigatório."),
+
+    body("ano")
+      .isInt()
+      .withMessage("O ano deve ser um número inteiro.")
+  ],
+  validarRequisicao,
+  atualizarLivro
+);
 
 // Atualizar parcialmente livro
-router.patch("/livros/:id", atualizarParcialmenteLivro);
+router.patch(
+  "/livros/:id",
+  [
+    body("titulo")
+      .optional()
+      .notEmpty()
+      .withMessage("O título não pode ser vazio."),
+
+    body("autor")
+      .optional()
+      .notEmpty()
+      .withMessage("O autor não pode ser vazio."),
+
+    body("genero")
+      .optional()
+      .notEmpty()
+      .withMessage("O gênero não pode ser vazio."),
+
+    body("ano")
+      .optional()
+      .isInt()
+      .withMessage("O ano deve ser um número inteiro."),
+
+    body("exemplaresDisponiveis")
+      .optional()
+      .isInt({ min: 0 })
+      .withMessage(
+        "A quantidade de exemplares deve ser um número inteiro maior ou igual a zero."
+      )
+  ],
+  validarRequisicao,
+  atualizarParcialmenteLivro
+);
 
 // Excluir livro
 router.delete("/livros/:id", excluirLivro);
